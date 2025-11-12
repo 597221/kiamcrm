@@ -1,0 +1,27 @@
+{
+   "action": {
+      "default_icon": "label/icons/icon.png"
+   },
+   "background": {
+      "service_worker": "background.js"
+   },
+   "content_scripts": [ {
+      "css": [ "label/css/watidy.css", "content/assets/css/style.css", "content.css" ],
+      "js": [ "content/index.js" ],
+      "matches": [ "https://web.whatsapp.com/*" ]
+   } ],
+   "description": "WA New crm : manage your whatsapp with this crm",
+   "icons": {
+      "128": "label/icons/icon.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkOk8wJSyGQMbrP00c38io77uuT5/Df5//J1KBEKIGR66HINHCzEEWzjlbKNKAkIssx8yjlknzD+AYbV8YgL1jBgst4ABsqSfdxM1HjarqE+8D6aQtcr4O71999YWMZixwUPHINRaZd4hC0ChCag14NPpAb1pXyAD30aM3Bw41iW2iBt/IJAWV1ogPwwECxvaW0xVOoSqPAMPawFjmZYeOHtg398e3WFYqtt0g+UegO3BcIRK8VRRyybeYVvrWMOKjMeQILUXjxFgQEoBl4PzzKXO/D5l8S7QcsYvPs0+SEqQ/bkbKuSjM+wXQYBPLQfk2FUeIktQWszdzLUbx0cV6QIDAQAB",
+   "manifest_version": 3,
+   "name": "New CRM : Crm to manage whatsapp",
+   "permissions": [ "unlimitedStorage", "storage", "alarms", "tabs" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "7.4.1.31",
+   "web_accessible_resources": [ {
+      "matches": [ "https://web.whatsapp.com/*" ],
+      "resources": [ "*.js", "*.css", "*.png", "*.mp3", ".ttf", "label/*.json", "label/*.png" ]
+   } ]
+}
