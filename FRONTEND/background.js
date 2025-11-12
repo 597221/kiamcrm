@@ -27,7 +27,7 @@ const w = {
   // Nome Da WL Ativa
   name: "watidy",
   // Versão de build
-  version: "7.4.1.31",
+  version: "7.4.2.13",
   // Chave de criptografia
   cript_key: "ffce211a-7b07-4d91-ba5d-c40bb4034a83",
   //Url do backend Principal
@@ -40,7 +40,7 @@ const w = {
     "api-whatsapp": "https://api-whatsapp.wascript.com.br"
   },
   // Url do painel de gestão
-  painel_Gestor: "https://painel.waclientes.com.br",
+  painel_Gestor: "https://whacrm-master.miquecrm.com",
   // Url do audio transcriber
   audio_transcriber: "https://audio-transcriber.wascript.com.br/transcription",
   // Selector de elementos DOM
@@ -175,18 +175,12 @@ function u() {
   });
 }
 function k() {
-  chrome.runtime.setUninstallURL(`https://google.com`);
+  chrome.runtime.setUninstallURL(`https://miquetools.com/contact`);
 }
 function _(e) {
-  e.reason === "install" && fetch(`https://google.com`).then((t) => {
-    if (!t.ok)
-      throw new Error("Erro na requisição: " + t.status);
-    return t.json();
-  }).then((t) => {
-    t.success && chrome.tabs.create({ url: t.url });
-  }).catch((t) => {
-    console.error("Erro ao fazer a requisição:", t);
-  });
+  if (e.reason === "install") {
+    chrome.tabs.create({ url: "https://kb.miquehosting.com/mique-crm/crm-extension-master" });
+  }
 }
 function i(e) {
   const t = chrome.runtime.getURL(e + "/src/index.html");
