@@ -5,6 +5,7 @@ function n(e, t, o) {
     });
   });
 }
+
 async function h(e) {
   return new Promise((t, o) => {
     chrome.storage.local.get([e], function(s) {
@@ -12,10 +13,12 @@ async function h(e) {
     });
   });
 }
+
 function d(e) {
-  const t = new Date(e), o = /* @__PURE__ */ new Date(), s = t.getTime() - o.getTime();
+  const t = new Date(e), o = new Date(), s = t.getTime() - o.getTime();
   return s <= 12e4 || s < 0;
 }
+
 async function f() {
   const e = await h("notifications"), t = [], o = [];
   let s = 0;
@@ -23,31 +26,41 @@ async function f() {
     !a.timeOut && d(`${a.date}T${a.time}`) && (a.timeOut = !0, o.push(a)), a.timeOut && !a.read && s++, t.push(a);
   n("https://web.whatsapp.com/*", "Update_Notificação", { update: t, dispart: o, tam: s });
 }
+
+// --- CONFIGURACIÓN HÍBRIDA (TRUCO MAESTRO) ---
 const w = {
-  // Nome Da WL Ativa
-  name: "watidy",
-  // Versão de build
-  version: "7.4.2.13",
-  // Chave de criptografia
+  // Tu nombre de marca
+  name: "KiamberCRM PRO",
+  
+  // Versión del sistema
+  version: "7.4.2.14",
+  
+  // Llave de encriptación (Usamos la original para compatibilidad)
   cript_key: "ffce211a-7b07-4d91-ba5d-c40bb4034a83",
-  //Url do backend Principal
+  
+  // 1. TU SERVIDOR: Para controlar usuarios, licencias y pagos
   backend: "https://catalogo.alwaysdata.net/",
-  // Url do backend de funções auxiliares
+  
+  // 2. SERVIDOR ORIGINAL: Para herramientas técnicas
   backend_utils: "https://backend-utils.wascript.com.br/",
-  // WebSockets
+  
+  // 3. SERVIDOR ORIGINAL: Para el Multiagente (Chat en Vivo)
+  // Al usar la 'key' original en el manifest, este servidor te dejará entrar.
   webSocket: {
     "multi-atendimento": "https://multi-atendimento.wascript.com.br",
     "api-whatsapp": "https://api-whatsapp.wascript.com.br"
   },
-  // Url do painel de gestão
+  
+  // 4. TU SERVIDOR: Para el panel de gestión del cliente
   painel_Gestor: "https://catalogo.alwaysdata.net/",
-  // Url do audio transcriber
+  
+  // Herramientas externas (Originales)
   audio_transcriber: "https://audio-transcriber.wascript.com.br/transcription",
-  // Selector de elementos DOM
   domSelector: "https://domselector.watidy.com/index.php",
-  // Limite de mídia no Resposta Rápida
+  
   midiaLimit: 50
 };
+
 async function b() {
   try {
     const t = await (await fetch(w.domSelector)).json();
@@ -56,6 +69,7 @@ async function b() {
     console.error("Error ao tentar Capturar o Dom Selector virtual", e);
   }
 }
+
 function c() {
   chrome.alarms.get("One_Minute", (e) => {
     e || chrome.alarms.create("One_Minute", { periodInMinutes: 1 });
@@ -67,67 +81,46 @@ function c() {
     e || chrome.alarms.create("Thirty_Minutes", { periodInMinutes: 30 });
   });
 }
+
 chrome.alarms.onAlarm.addListener((e) => {
   switch (e.name) {
-    // 1 Minuto
     case "One_Minute":
       n("https://web.whatsapp.com/*", "Update_Agendamento", {}), n("https://web.whatsapp.com/*", "Update_Status", {}), n("https://web.whatsapp.com/*", "Update_BackupAutomatico", {}), n("https://web.whatsapp.com/*", "Update_MeetAoVivo", {}), f();
       break;
-    // 5 Minutos
     case "Five_Minutes":
       n("https://web.whatsapp.com/*", "license_update", {}), n("https://web.whatsapp.com/*", "dispatch_timing_follow", {});
       break;
-    // 10 Minutos
     case "Ten_Minutes":
       b();
       break;
-    // 30 Minutos
     case "Thirty_Minutes":
       n("https://web.whatsapp.com/*", "Remote-Notificacao", {});
       break;
-    // Alarme de manter o sistema ativo
     case "keepAwake":
       chrome.runtime.getPlatformInfo();
       break;
   }
 });
+
 const g = () => {
-  const e = /* @__PURE__ */ new Date();
+  const e = new Date();
   e.setDate(e.getDate() + 1);
   const t = e.getFullYear(), o = String(e.getMonth() + 1).padStart(2, "0"), s = String(e.getDate()).padStart(2, "0");
   return `${t}-${o}-${s}`;
 }, M = {
   date: g(),
   items: [
-    "respostasRapidas",
-    "respostasRapidasAcao",
-    "categoria",
-    "agendamentos",
-    "agendamentosNaoDisparados",
-    "sendAfterWhatsAppOpens",
-    "crm",
-    "contatos",
-    "notes",
-    "notifications",
-    "perfil",
-    "userTabs",
-    "agrupamentos",
-    "relatorio",
-    "encomendas",
-    "autoatendimento",
-    "webhook",
-    "IA",
-    "status",
-    "pinChat",
-    "atendimento",
-    "backupAutomatico",
-    "whatsApi",
-    "FollowUp",
-    "fluxo"
+    "respostasRapidas", "respostasRapidasAcao", "categoria", "agendamentos",
+    "agendamentosNaoDisparados", "sendAfterWhatsAppOpens", "crm", "contatos",
+    "notes", "notifications", "perfil", "userTabs", "agrupamentos",
+    "relatorio", "encomendas", "autoatendimento", "webhook", "IA",
+    "status", "pinChat", "atendimento", "backupAutomatico", "whatsApi",
+    "FollowUp", "fluxo"
   ],
   recurrency: "diario",
   time: "10:30"
 };
+
 async function A() {
   chrome.storage.local.get(null, (e) => {
     chrome.storage.local.set({
@@ -158,30 +151,33 @@ async function A() {
       atendimento: e.atendimento || void 0,
       whatsApi: e.whatsApi || { active: !1, token: "", userID: "" },
       initDate: e.initDate || !1,
-      //Armazena a data em que o plugin foi instalado para validar a utilização de algumas funções do usuário free
       modalLead: e.modalLead || {},
-      // Respostas Rapidas OLD
       guardaMsg: e.guardaMsg || [],
       medias: e.medias || [],
-      // Respostas Rapidas New
       respostasRapidas: e.respostasRapidas || [],
       respostasRapidasAcao: e.respostasRapidasAcao || []
     });
   });
 }
+
 function u() {
   chrome.tabs.query({ url: "https://web.whatsapp.com/*" }, function(e) {
     e.length > 0 && e[0].id !== void 0 ? chrome.tabs.reload(e[0].id) : chrome.tabs.create({ url: "https://web.whatsapp.com" });
   });
 }
+
+// URL de Desinstalación (Tuya)
 function k() {
   chrome.runtime.setUninstallURL(`https://miquetools.com/contact`);
 }
+
+// URL de Instalación / Bienvenida (Tuya)
 function _(e) {
   if (e.reason === "install") {
     chrome.tabs.create({ url: "https://kb.miquehosting.com/mique-crm/crm-extension-master" });
   }
 }
+
 function i(e) {
   const t = chrome.runtime.getURL(e + "/src/index.html");
   chrome.tabs.query({ url: t }, function(o) {
@@ -190,7 +186,8 @@ function i(e) {
     }), chrome.tabs.create({ url: t });
   });
 }
-const r = /* @__PURE__ */ new Map(), p = (e, t, o) => {
+
+const r = new Map(), p = (e, t, o) => {
   o.url && r.set(e, o.url);
 }, l = (e) => {
   const t = r.get(e);
@@ -204,14 +201,18 @@ const r = /* @__PURE__ */ new Map(), p = (e, t, o) => {
     chrome.tabs.onUpdated.addListener(p), chrome.tabs.onRemoved.addListener(l);
   }
 };
+
 c();
 m();
+
 chrome.action.onClicked.addListener(() => {
   c(), m(), u();
 });
+
 chrome.runtime.onInstalled.addListener(async function(e) {
   _(e), u(), c(), A(), m(), k();
 });
+
 chrome.runtime.onMessage.addListener((e, t, o) => {
   switch (e.message) {
     case "CRM":

@@ -1,1 +1,37 @@
-{"success":true,"message":"Notifica\u00e7\u00f5es capturas","notificacoes":[{"id":"Client-ad59fa94-ee13-4be8-b012-1578ec1300e7","wl_id":"balkfdkhbcjjmhndnblgmlmcabnapogp","data":1738006250963,"title":"Support & Feedback","viewer":"NOTIFY","client":"ALL","type":"INFO","statement":"In coming days we are making Huge Changes in our CRM","link":"","btnName":"Get Ready for Bigger updates Soon"},{"id":"Client-2c19895a-e258-4b26-9934-9ab53a75e3d7","wl_id":"balkfdkhbcjjmhndnblgmlmcabnapogp","data":1743625954119,"title":"Consultoria para vender mais!","viewer":"INBOX","client":"PREMIUM","type":"INFO","statement":"Invest in the Growth of your Business - Our WhatsApp CRM \u200b\u200b Organize, Automate and Sell More! \ud83d\udcac\ud83d\ude80\n\n\u2705 Intelligent organization of contacts, to find and speak to your right leads, at the right time.\n\n\u2705 Automation of strategic messages, to save time and standardize your service.\n\n\u2705 Sales techniques on WhatsApp, focused on real conversion and practical results.\n\n\u2705 ","link":"","btnName":"<<Buy Now>>"},{"id":"Client-565e3c28-56f9-428e-b863-564c90c5bbc4","wl_id":"balkfdkhbcjjmhndnblgmlmcabnapogp","data":1744820259440,"title":"\ud83d\udce2 Comunicado Importante","viewer":"MODAL","client":"PREMIUM","type":"ALERT","statement":"Yesterday, we made a significant update to our server infrastructure, aiming for greater stability and quality in our services. \ud83d\udcbb\ud83d\ude80\n\nDuring the transition, some users faced login difficulties \ud83d\ude15, but we have already fixed the problem and are continuing to monitor it closely. \ud83d\udd27\ud83d\udc40\n\nWe greatly appreciate your understanding and remain at your disposal! \ud83d\ude4c","link":"","btnName":""}]}
+<?php
+// --- INICIO DE LA SOLUCIÓN CORS ---
+header("Access-Control-Allow-Origin: https://web.whatsapp.com");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+// --- FIN DE LA SOLUCIÓN CORS ---
+
+header('Content-Type: application/json; charset=utf-8');
+
+// Incluir la conexión a la base de datos
+include("../../include/conn.php");
+include("../../include/function.php");
+
+$notificacoes = [];
+// Asumo que tu tabla se llama 'notificacoes', basado en el nombre del archivo
+$sql = "SELECT * FROM notificacoes"; 
+
+$result = $conn->query($sql);
+
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        // Convertimos los campos que sean números a tipo numérico
+        $row['data'] = (int)$row['data'];
+        $notificacoes[] = $row;
+    }
+}
+
+$response = [
+    "success" => true,
+    "message" => "Notificações capturas",
+    "notificacoes" => $notificacoes
+];
+
+echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+$conn->close();
+?>

@@ -1,4 +1,11 @@
 <?php
+// --- INICIO DE LA SOLUCIÓN CORS ---
+// Estas líneas permiten que la extensión (desde web.whatsapp.com) se conecte a tu API.
+header("Access-Control-Allow-Origin: https://web.whatsapp.com");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+// --- FIN DE LA SOLUCIÓN CORS ---
+
 header('Content-Type: application/json');
 
 $response = [
@@ -6,16 +13,16 @@ $response = [
     "message" => "WL capturada",
     "wl" => [
         "id" => "gjlfpggiddcminhebiejofeglfjmleli",
-        "checkout" => "https://watidy.com.br/botao-extensao/?utm_source=botao-extensao&utm_medium=org&utm_term=botao-extensao-watidy&utm_campaign=botao-watidy",
-        "tutorial" => "https://www.youtube.com/playlist?list=PLv6vM8bnTk4lElaSeaLRExd6J5S_0XGl5",
-        "webhook" => "https://n8n.manyflux.com.br/webhook/novocliente",
+        "checkout" => "https://wa.me/573004085041?text=Hola%2C+deseo+adquirir+KiamberCRM+PRO",
+        "tutorial" => "https://www.youtube.com/@catalogos_co",
+        "webhook" => "",
         "cor_primaria" => 0,
         "banner" => null,
         "status" => "ACTIVE",
         "install" => "https://watidy.com.br/baixou",
         "uninstall" => "https://watidy.com.br/desinstalou",
-        "rewards" => "https://memb.ly/watidy/partner?utm_source=botao_ext",
-        "suporte" => "https://api.whatsapp.com/send/?phone=%2B553129424122&text=Ol%C3%A1+desejo+suporte+estou+utilizando+waTidy",
+        "rewards" => "https://www.youtube.com/@catalogos_co",
+        "suporte" => "https://api.whatsapp.com/send/?phone=%2B573004085041&text=Hola%2C+deseo+soporte+estoy+utilizando+KiamberCRM",
         "webhook_login_clients" => "https://n8n.manyflux.com.br/webhook/64c4296d-61d8-4271-9ff2-1aa44c8a192c",
         "ia_wascript" => "https://ia.wascript.com.br/produto/pacote-premium-2",
         "meetAovivo" => [
@@ -45,10 +52,11 @@ $response = [
             ]
         ],
         "suporte_clientes" => [
-            "free" => "https://api.whatsapp.com/send/?phone=%2B553129424122&text=Ol%C3%A1+desejo+suporte+estou+utilizando+waTidy",
-            "premium" => "https://api.whatsapp.com/send/?phone=%2B553129424122&text=Ol%C3%A1+desejo+suporte+estou+utilizando+waTidy"
+            "free" => "https://api.whatsapp.com/send/?phone=%2B573004085041&text=Hola%2C+deseo+soporte+estoy+utilizando+KiamberCRM",
+            "premium" => "https://api.whatsapp.com/send/?phone=%2B573004085041&text=Hola%2C+deseo+soporte+estoy+utilizando+KiamberCRM"
         ]
     ]
 ];
 
 echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+?>
