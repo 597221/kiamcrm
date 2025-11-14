@@ -1,279 +1,169 @@
 <?php
 
-
-
-$status = true;
-
-
-
-
-
-
-// echo password_hash("123456",PASSWORD_BCRYPT);
-
+// --- INICIO DE LA SOLUCIÓN CORS ---
+header("Access-Control-Allow-Origin: https://web.whatsapp.com");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+// --- FIN DE LA SOLUCIÓN CORS ---
 
 include("include/conn.php");
 include("include/function.php");
 $login = cekSession();
-if ($login == 1)
-{
+if ($login == 1) {
     redirect("index.php");
 }
-
 ?>
-
-<?php if($status){ ?>
 <!DOCTYPE html>
-<html lang="en"><meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<html lang="es">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Whatsapp CRM | Login</title>
-	<link href="https://fonts.googleapis.com/css?family=Poppins:600&amp;display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="../cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-	<link rel="shortcut icon" type="image/x-icon" href="images/<?= $favicon_logo; ?>">
-	
-	
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-	<style>
-		/* General Styling */
-		body, html {
-			margin: 0;
-			padding: 0;
-			height: 100%;
-			font-family: 'Poppins', sans-serif;
-			background-color: #f0f2f5;
-			display: flex;
-			flex-direction: column;
-		}
-		
-		h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-weight: 600;
-    color: #555; /* Lighten the text color */
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KiamberCRM | Iniciar Sesión</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="shortcut icon" type="image/x-icon" href="images/<?= $favicon_logo; ?>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
-		.container {
-			flex: 1;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-		}
-
-		.container .form-box {
-			width: 100%;
-			max-width: 400px;
-			background-color: white;
-			padding: 40px;
-			border-radius: 10px;
-			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-			box-sizing: border-box;
-		}
-
-		.container img {
-			width: 200px;
-			display: block;
-			margin: 0 auto 20px;
-		}
-
-		.container h2 {
-			text-align: center;
-			margin-bottom: 20px;
-			font-weight: 600;
-			color: #333;
-		}
-
-		.input-div {
-			margin-bottom: 20px;
-			position: relative;
-			width: 100%;
-		}
-
-		.input-div i {
-			position: absolute;
-			left: 15px;
-			top: 12px;
-			color: #999;
-		}
-
-		.input-div input {
-			width: 100%;
-			padding: 12px 15px 12px 45px;
-			border: none;
-			border-radius: 30px;
-			background-color: #f0f2f5;
-			color: #333;
-			font-size: 14px;
-			outline: none;
-			transition: background 0.3s ease;
-			box-sizing: border-box; /* Ensure input fields are within the card */
-		}
-
-		.input-div input:focus {
-			background-color: #e4e6eb;
-		}
-
-		.btn {
-			width: 100%;
-			padding: 12px;
-			background-color:<?= $bgColor; ?>;
-			color: white;
-			border: none;
-			border-radius: 30px;
-			cursor: pointer;
-			font-size: 16px;
-			transition: background-color 0.3s ease;
-			box-sizing: border-box;
-		}
-
-		.btn:hover {
-			background-color: grey;
-		}
-
-		.links {
-			text-align: center;
-			margin-top: 15px;
-		}
-
-		.links a {
-			color: <?= $bgColor; ?>;
-			text-decoration: none;
-			margin: 0 10px;
-			font-size: 14px;
-		}
-
-		.links a:hover {
-			text-decoration: underline;
-		}
-
-		.forgot-password {
-			display: block;
-			text-align: right;
-			color: <?= $bgColor; ?>;
-			font-size: 10px;
-			margin-top: -10px;
-			margin-bottom: 20px;
-		}
-
-		.forgot-password:hover {
-			text-decoration: underline;
-		}
-
-		.footer {
-			text-align: center;
-			font-size: 12px;
-			color: #aaa;
-			padding: 20px 0;
-			background-color: #f0f2f5;
-			width: 100%;
-		}
-
-		.footer a {
-			color: <?= $bgColor; ?>;
-			text-decoration: none;
-		}
-
-		.footer a:hover {
-			text-decoration: underline;
-		}
-
-		/* Responsive */
-		@media (max-width: 600px) {
-			.container .form-box {
-				width: 90%;
-			}
-		}
-		
-		a{
-		    color :<?= $color_background; ?>;
-		}
-		
-		
-	</style>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Un gris más suave como el del ejemplo */
+        }
+        
+        /* Estilos para que el botón use tu color principal de la BD */
+        .btn-principal {
+            background-color: <?= $bgColor; ?>;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn-principal:hover {
+            filter: brightness(0.9);
+        }
+        .focus-ring-principal:focus {
+            --tw-ring-color: <?= $bgColor; ?>;
+            --tw-ring-opacity: 0.5;
+            box-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+        }
+    </style>
 </head>
-<body>
-	<div class="container">
-		<div class="form-box">
-			<img src="images/<?= $main_logo; ?>" alt="ImbX Logo" style='width:160px;height:45px;'><br>
+<body class="antialiased">
 
-			<form id="login-form">
-				<!-- Username Input -->
-				<div class="input-div">
-					<i class="fas fa-user"></i>
-					<input type="text" id="username" name="username" placeholder="Username" required>
-				</div>
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+            
+            <div class="hidden md:flex flex-col items-center justify-center p-12 bg-green-50">
+                <img src="https://fil-e.b-cdn.net/Im%C3%A1genes/crm/Mique%20CRM%20Whatsapp.png" 
+                     alt="Ilustración de CRM" class="w-full h-auto object-cover">
+                <h2 class="mt-6 text-2xl font-bold text-gray-700 text-center">Gestiona tus chats de forma eficiente</h2>
+                <p class="mt-2 text-gray-500 text-center">Tu solución CRM para WhatsApp todo en uno.</p>
+            </div>
 
-				<!-- Password Input -->
-				<div class="input-div">
-					<i class="fa fa-user"></i>
-					<input type="password" id="password" name="password" placeholder="Password" required>
-				</div>
+            <div class="p-8 md:p-12">
+                <div class="flex justify-center mb-6">
+                    <img src="images/<?= $main_logo; ?>" alt="Logotipo KiamberCRM" class="h-14">
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800 mb-2 text-center">Bienvenido de Nuevo</h1>
+                <p class="text-gray-500 mb-8 text-center">Por favor, inicia sesión para continuar.</p>
 
-				<a href="/downloads/<?= $extension_file; ?>" class="forgot-password" target="_blank">Extensions Download ?</a>
-				
-				<!-- Submit Button -->
-				<!--<input type="submit" class="btn" value="Login">-->
-				<button type="submit" <?= $style; ?> class = "btn">Login</button>
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="username" class="block text-gray-700 text-sm font-semibold mb-2">Usuario</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            <input type="text" id="username" name="username" placeholder="Tu nombre de usuario"
+                                   class="w-full pl-10 pr-4 py-2.5 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus-ring-principal" required>
+                        </div>
+                    </div>
 
-				<!-- Links to Policy Pages -->
-				<div class="links">
-					<a href="<?= $external_link; ?>" target="_blank">More Programs</a>
-					<a href="https://api.whatsapp.com/send?phone=<?= $supportPhoneNumber; ?>&text=I+want+to+discuss+about+whatsapp+crm." target="_blank">Chat on whatsapp</a>
-				</div>
-			</form>
-		</div>
-	</div>
+                    <div>
+                        <label for="password" class="block text-gray-700 text-sm font-semibold mb-2">Contraseña</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            <input type="password" id="password" name="password" placeholder="Tu contraseña"
+                                   class="w-full pl-10 pr-4 py-2.5 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus-ring-principal" required>
+                        </div>
+                    </div>
+                    
+                    <div class="text-right">
+                        <a href="/downloads/<?= $extension_file; ?>" class="text-sm font-medium" style="color: <?= $bgColor; ?>;" target="_blank">¿Descargar extensión?</a>
+                    </div>
 
-	<div class="footer">
-		<p><a href="https://wa.me/<?= $supportPhoneNumber; ?>" target="_blank">Contact Us</a></p>
-	</div>
+                    <button type="submit" <?= $style; ?> 
+                            class="w-full btn-principal font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline">
+                        Iniciar Sesión
+                    </button>
 
-<script type="text/javascript" src="login-page/js/main.js"></script>
+                    <div class="text-center text-sm pt-4">
+                        <a href="<?= $external_link; ?>" target="_blank" class="text-gray-600 hover:text-gray-900 mx-2 transition-colors">Más Programas</a>
+                        <span class="text-gray-300">|</span>
+                        <a href="https://api.whatsapp.com/send?phone=<?= $supportPhoneNumber; ?>&text=Hola,+me+gustaría+poder+hablar+sobre+el+CRM+de+WhatsApp." target="_blank" class="text-gray-600 hover:text-gray-900 mx-2 transition-colors">Chatear en WhatsApp</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-$(document).ready(function () {
-    $('#login-form').submit(function (e) {
-        e.preventDefault(); // Prevent the default form submission
-        
-        // Get the form data
-        var formData = {
-            username: $('#username').val(),
-            password: $('#password').val()
-        };
+    $(document).ready(function () {
+        $('#login-form').submit(function (e) {
+            e.preventDefault(); // Prevenir el envío por defecto del formulario
+            
+            // Obtener los datos del formulario
+            var formData = {
+                username: $('#username').val(),
+                password: $('#password').val()
+            };
 
-        // Send an AJAX POST request to your PHP script
-        $.ajax({
-            type: 'POST',
-            url: 'function/check-login.php',
-            data: formData,
-            dataType: 'json', // important: to parse JSON automatically
-            success: function (response) {
-                if (response.status === true) {
-                    // success
-                    window.location.href = 'index.php';
-                } else {
-                    // failed
+            // Enviar la petición AJAX a tu script de PHP
+            $.ajax({
+                type: 'POST',
+                url: 'function/check-login.php', // Esta es tu lógica original
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === true) {
+                        // Éxito: Redirigir al panel principal
+                        window.location.href = 'index.php';
+                    } else {
+                        // Fallo: Mostrar alerta de error
+                        Swal.fire({
+                            title: '¡Error!',
+                            text: 'El usuario o la contraseña son incorrectos.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                            confirmButtonColor: '<?= $bgColor; ?>' // Usa tu color de marca
+                        });
+                    }
+                },
+                error: function () {
+                    // Error en la petición
                     Swal.fire({
-                                title: 'Error!',
-                                text: 'Incorrect username or password !!',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
+                        title: '¡Oops!',
+                        text: 'Ocurrió un error al procesar la solicitud. Por favor, inténtalo de nuevo.',
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '<?= $bgColor; ?>'
+                    });
                 }
-            },
-            error: function () {
-                alert('An error occurred while processing the request.');
-            }
+            });
         });
-
     });
-});
-</script>
-<script disable-devtool-auto="" src="../pay.imb.org.in/Qrcode/disable-devtool.html" data-url="https://www.google.com/"></script> 
+    </script>
+    
 </body>
 </html>
-<?php } ?>
