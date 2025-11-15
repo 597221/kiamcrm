@@ -1,13 +1,11 @@
 <?php
 // --- SOLUCIÓN CORS ---
-// Permitimos cualquier origen para la API, o puedes ser específico
 header("Access-Control-Allow-Origin: *"); 
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Maneja la solicitud pre-flight de OPTIONS
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    http_response_code(204); // No Content
+    http_response_code(204);
     exit;
 }
 // --- FIN SOLUCIÓN CORS ---
@@ -17,46 +15,37 @@ header('Content-Type: application/json');
 // 1. INCLUIR LA CONEXIÓN A LA BD
 include "../../include/conn.php";
 
-// 2. OBTENER LA LICENSE_KEY ENVIADA POR LA EXTENSIÓN
+// 2. OBTENER EL TOKEN (que el frontend llama 'license_key')
 $data = json_decode(file_get_contents("php://input"));
 
-if (!isset($data->license_key)) {
-    echo json_encode(["success" => false, "message" => "License key no proporcionada"]);
+if (!isset($data->token)){
+    echo json_encode(["success" => false, "message" => "Token no proporcionado"]);
     exit;
 }
 
-$license_key = $data->license_key;
+$token = $data->token;
 
-// 3. PREPARAR Y EJECUTAR LA CONSULTA A LA BD
-// Buscamos la licencia y traemos los datos del usuario asociado
-$stmt = $conn->prepare("SELECT l.*, u.name, u.email, u.status as user_status, u.user_type 
-                       FROM licenses l 
-                       JOIN users u ON l.user_id = u.id 
-                       WHERE l.license_key = ?");
-$stmt->bind_param("s", $license_key);
+// 3. PREPARAR Y EJECUTAR LA CONSULTA A LA TABLA 'users'
+$stmt = $conn->prepare("SELECT * FROM users WHERE token = ?");
+$stmt->bind_param("s", $token);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+    $user = $result->fetch_assoc();
     
     // --- INICIO DE LAS VALIDACIONES REALES ---
 
-    // 4. VERIFICAR SI LA LICENCIA ESTÁ ACTIVA
-    if ($row['status'] !== 'active') {
-        echo json_encode(["success" => false, "message" => "Licença inativa"]);
-        exit;
-    }
-
-    // 5. VERIFICAR SI EL USUARIO ESTÁ ACTIVO
-    if ($row['user_status'] !== 'active') {
+    // 4. VERIFICAR SI EL USUARIO ESTÁ ACTIVO
+    // (Tu tabla usa 1 para 'active', 0 para 'inactive')
+    if ($user['status'] != 1) {
         echo json_encode(["success" => false, "message" => "Usuário inativo"]);
         exit;
     }
 
-    // 6. VERIFICAR LA FECHA DE EXPIRACIÓN
+    // 5. VERIFICAR LA FECHA DE EXPIRACIÓN (¡la columna de tu panel!)
     $today = date("Y-m-d");
-    $expiration_date = $row['expiration_date'];
+    $expiration_date = $user['plan_expiry_date'];
 
     if ($today > $expiration_date) {
         echo json_encode(["success" => false, "message" => "Licença expirada"]);
@@ -65,29 +54,28 @@ if ($result->num_rows > 0) {
 
     // --- FIN DE LAS VALIDACIONES ---
 
-    // 7. SI TODO ES CORRECTO, ENVIAR RESPUESTA EXITOSA
-    $plan = strtoupper($row['plan']); // Obtenemos el plan de la BD
-    
+    // 6. SI TODO ES CORRECTO, ENVIAR RESPUESTA EXITOSA
+    // (Determinamos el plan basado en la fecha de expiración, o puedes añadir una columna "plan")
+    $plan = "PREMIUM"; // Asumimos que si tiene fecha válida, es premium.
+
     $response = [
         "status" => true,
         "success" => true,
         "message" => "Validado con éxito",
         "user" => [
-            "id" => $row['user_id'],
-            "name" => $row['name'],
-            "email" => $row['email'],
-            "status" => $row['user_status'],
+            "id" => $user['id'],
+            "name" => $user['client_name'],
+            "email" => $user['email'],
+            "status" => ($user['status'] == 1) ? 'active' : 'inactive',
             "plan" => $plan, 
-            "user_type" => $row['user_type'],
-            "expiration_date" => $row['expiration_date'],
+            "user_type" => "user", // Asumimos que todos son 'user'
+            "expiration_date" => $user['plan_expiry_date'],
             "permissions" => [
-                // Aquí puedes hacer la lógica de permisos más avanzada,
-                // pero por ahora, si es premium, damos todo.
                 "crm" => true,
                 "funnel" => true,
                 "schedule" => true,
                 "check_sp" => true,
-                "multiagent" => ($plan === 'PREMIUM'), // Solo si es PREMIUM
+                "multiagent" => ($plan === 'PREMIUM'),
                 "audio_transcription" => true
             ]
         ],
@@ -98,8 +86,8 @@ if ($result->num_rows > 0) {
     echo json_encode($response);
 
 } else {
-    // 8. SI NO SE ENCONTRÓ LA LICENCIA
-    echo json_encode(["success" => false, "message" => "Licença não encontrada"]);
+    // 8. SI NO SE ENCONTRÓ EL TOKEN (sesión inválida)
+    echo json_encode(["success" => false, "message" => "Sessão inválida ou não encontrada"]);
 }
 
 $stmt->close();
